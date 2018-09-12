@@ -3,8 +3,11 @@ The views.py file.
 
 All routes in the app are located here
 """
+from flask import jsonify
 
-ORDERS = [
+from app import app
+
+orders = [
     {
         'name': 'Hamburger',
         'quantity' : 3,
@@ -24,3 +27,8 @@ ORDERS = [
         'id' : 3
     }
 ]
+
+@app.route('/api/v1/orders', methods=['GET'])
+def all_orders():
+    """Return a JSON object of all orders made with a status code of 200"""
+    return jsonify({'orders': orders}), 200
