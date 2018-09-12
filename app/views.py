@@ -1,8 +1,10 @@
-from app import app
+"""
+The views.py file.
 
-from flask import Flask, jsonify, request
+All routes in the app are located here
+"""
 
-orders = [
+ORDERS = [
     {
         'name': 'Hamburger',
         'quantity' : 3,
