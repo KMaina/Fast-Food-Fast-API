@@ -4,6 +4,10 @@ The views.py file.
 All routes in the app are located here
 """
 
+from flask import jsonify, request
+
+from app import app
+
 orders = [
     {
         'name': 'Hamburger',
@@ -27,3 +31,14 @@ orders = [
         'status': 0
     }
 ]
+
+@app.route('/api/v1/order/<int:order_id>', methods=['PUT'])
+def edit_order(order_id):
+    """Returns a status code and JSON object"""
+    order = [order for order in orders if order['id'] == order_id]
+    if order:
+        order[0]['status'] = request.json['status']
+        return jsonify({'order': order[0]}), 200
+    if not order:
+        return jsonify(message="Error, cannot change the details"), 404
+        
