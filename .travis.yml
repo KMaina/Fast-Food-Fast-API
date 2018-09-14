@@ -7,3 +7,6 @@ install:
 
 script:
   - "python -m pytest"
+  - coverage run --source=app python -m pytest
+ 
+after-success: coveralls
