@@ -11,8 +11,8 @@ orders = []
 
 class Orders(Resource):
     """
-    GET all orders placed
-    POST a new order
+    GET/ all orders placed
+    POST/ a new order
     """
     def get(self):
         """Return a list of all orders posted"""
@@ -34,6 +34,9 @@ class Orders(Resource):
 
 class OrderSpecific(Resource):
     """
+    GET/ a specific order
+    PUT/ edit a specific order
+    DELETE/ delete a specific order 
     """
     def get(self, order_id):
         order = [order for order in orders if order['id'] == order_id]
@@ -60,4 +63,6 @@ class OrderSpecific(Resource):
         if order:
             del orders[0]
             return {'orders': orders}, 204
+        else:
+            return {'message': 'Could not find your order'}, 404
         
