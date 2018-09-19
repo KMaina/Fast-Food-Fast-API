@@ -4,55 +4,60 @@ The views.py file.
 All routes in the app are located here
 """
 
-from flask import jsonify, request
+from flask import request, json
+from flask_restful import Resource
 
-from app import app
+orders = []
 
-orders = [
-    {
-        'name': 'Hamburger',
-        'quantity' : 3,
-        'description' : 'Tasty chicken burger perfect as a snack.',
-        'id' : 1,
-        'status': 0
-    },
-    {
-        'name': 'French Fries',
-        'quantity' : 2,
-        'description' : 'Perfectly salted for you.',
-        'id' : 2,
-        'status': 0
-    },
-    {
-        'name': 'Pizza',
-        'quantity' : 5,
-        'description' : 'Large pizza great for movie nights.',
-        'id' : 3,
-        'status': 0
-    }
-]
+class Orders(Resource):
+    """
+    GET all orders placed
+    POST a new order
+    """
+    def get(self):
+        """Return a list of all orders posted"""
+        if len(orders) == 0:
+            return {'messsage': 'Nothing found'}, 404
+        return {'orders': orders}, 200
 
-@app.route('/api/v1/order/<int:order_id>', methods=['GET'])
-def one_order(order_id):
-    """Returns a JSON object and a status code"""
-    order = [order for order in orders if order['id'] == order_id]
-    if order:
-        return jsonify({'order': order[0]}), 200
-    if not order:
-        return jsonify(message='Error, order not found'), 404
-      
-@app.route('/api/v1/orders', methods=['GET'])
-def all_orders():
-    """Return a JSON object of all orders made with a status code of 200"""
-    return jsonify({'orders': orders}), 200
+    def post(self):
+        """Posts a specific order"""
+        order_data = {}
+        data = request.get_json()
+        order_data['name'] = data['name']
+        order_data['quantity'] = data['quantity']
+        order_data['description'] = data['description']
+        order_data['id'] = len(orders) + 1
+        order_data['status'] = data['status']     
+        orders.append(order_data)
+        return {'orders': order_data}, 201
 
-@app.route('/api/v1/order/<int:order_id>', methods=['PUT'])
-def edit_order(order_id):
-    """Returns a status code and JSON object"""
-    order = [order for order in orders if order['id'] == order_id]
-    if order:
-        order[0]['status'] = request.json['status']
-        return jsonify({'order': order[0]}), 200
-    if not order:
-        return jsonify(message="Error, cannot change the details"), 404
-       
+class OrderSpecific(Resource):
+    """
+    """
+    def get(self, order_id):
+        order = [order for order in orders if order['id'] == order_id]
+        if order:
+            return {'order': order[0]}, 200
+        if not order:
+            return {'message':'Error, order not found'}, 404
+    
+    def put(self, order_id):
+        order = [order for order in orders if order['id'] == order_id]
+        if order:
+            data = request.get_json()
+            order[0]['name'] = data['name']
+            order[0]['quantity'] = data['quantity']
+            order[0]['description'] = data['description']
+            order[0]['status'] = data['status']     
+            # orders.append(order_data)
+            return {'order': order[0]}, 200
+        if not order:
+            return {'message':'Error, order not found'}, 404
+    
+    def delete(self, order_id):
+        order = [order for order in orders if order['id'] == order_id]
+        if order:
+            del orders[0]
+            return {'orders': orders}, 204
+        
