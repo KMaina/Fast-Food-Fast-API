@@ -18,19 +18,19 @@ class Orders(Resource):
         """Return a list of all orders posted"""
         if len(orders) == 0:
             return {'messsage': 'Nothing found'}, 404
-        return {'orders': orders}, 200
+        return orders, 200
 
     def post(self):
         """Posts a specific order"""
-        order_data = {}
-        data = request.get_json()
-        order_data['name'] = data['name']
-        order_data['quantity'] = data['quantity']
-        order_data['description'] = data['description']
-        order_data['id'] = len(orders) + 1
-        order_data['status'] = data['status']     
+        order_data = {
+            'name': request.json['name'],
+            'quantity' : request.json['quantity'],
+            'description' : request.json['description'],
+            'id' : len(orders) + 1,
+            'status' : request.json['status']
+        }
         orders.append(order_data)
-        return {'orders': order_data}, 201
+        return order_data, 201
 
 class OrderSpecific(Resource):
     """
@@ -53,7 +53,6 @@ class OrderSpecific(Resource):
             order[0]['quantity'] = data['quantity']
             order[0]['description'] = data['description']
             order[0]['status'] = data['status']     
-            # orders.append(order_data)
             return {'order': order[0]}, 200
         if not order:
             return {'message':'Error, order not found'}, 404
