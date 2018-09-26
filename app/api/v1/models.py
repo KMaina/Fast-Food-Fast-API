@@ -1,4 +1,5 @@
-from flask import jsonify, request
+from flask import jsonify, request, make_response
+from flask_jwt_extended import create_access_token, get_jwt_identity, get_raw_jwt
 
 USERS_LIST = []
 
@@ -33,14 +34,21 @@ class Users():
         return response
     
     def get_all_users(self):
-        global USERS_LIST
-        if len(USERS_LIST) == 0:
-            response = jsonify({'msg':'No users yet'})
-            response.status_code = 404
-            return response
-        else:
-            response = jsonify({'users': USERS_LIST})
-            response.status_code == 200
+        """Returns all users who have registered"""
+        current_user = get_jwt_identity()
+        if current_user:
+            global USERS_LIST
+            if len(USERS_LIST) == 0:
+                response = jsonify({'msg':'No users yet'})
+                response.status_code = 404
+                return response
+            else:
+                response = jsonify({'users': USERS_LIST})
+                response.status_code == 200
+                return response
+        if not current_user:
+            response = jsonify({'msg' :  'Sorry, you cannot view this page'})
+            response.status_code = 401
             return response
     
     def login_user(self, username, password):
@@ -54,8 +62,12 @@ class Users():
             global USERS_LIST
             user = [user for user in USERS_LIST if user['username'] == username and user['password'] == password]
             if user:
-                response =  jsonify({'msg' : 'Successfully logged in'})
+                access_token = create_access_token(identity=username)
+                access_token = access_token
+                response = make_response(jsonify({'access-token' : access_token, 'msg' : 'Successfully logged in'}))
                 response.status_code = 200
+                response.headers['Authorization'] = access_token
+                print(response)
                 return response
             else:
                 response = jsonify({'msg' : 'Sorry, problem logging you in'})
