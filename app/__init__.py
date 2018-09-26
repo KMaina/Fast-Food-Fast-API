@@ -9,7 +9,7 @@ from flask_restful import Api
 
 from app.api.v1.views_orders import Orders, OrderSpecific
 
-
+from app.api.v1.views_users import UserRegistration, UserLogin
 
 from instance.config import app_config
 
@@ -20,5 +20,7 @@ def create_app(config_name):
     api_endpoint = Api(app)
     api_endpoint.add_resource(Orders, '/api/v1/orders')
     api_endpoint.add_resource(OrderSpecific, '/api/v1/order/<int:order_id>')
+    api_endpoint.add_resource(UserRegistration, '/api/v1/users')
+    api_endpoint.add_resource(UserLogin, '/api/v1/users/login')
 
     return app
