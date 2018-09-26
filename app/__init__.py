@@ -19,11 +19,7 @@ def create_app(config_name):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_object(app_config[config_name])
     app.config.from_pyfile('config.py')
-    # app.secret_key = os.environ["JWT_SECRET_KEY"]
-    # os.environ["JWT_SECRET_KEY"]
-    # app.config.get("SECRET_KEY")
     app.secret_key = os.getenv('SECRET_KEY')
-    # os.getenv("SECRET_KEY")
     api_endpoint = Api(app)
     api_endpoint.add_resource(Orders, '/api/v1/orders')
     api_endpoint.add_resource(OrderSpecific, '/api/v1/order/<int:order_id>')
