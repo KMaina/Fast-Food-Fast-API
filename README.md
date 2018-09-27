@@ -3,6 +3,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/KMaina/Fast-Food-Fast-API/badge.svg?branch=develop)](https://coveralls.io/github/KMaina/Fast-Food-Fast-API?branch=develop)
 # Fast-Food-Fast-API
 
+This contains all work undertaken for challenge 2
 
 ## Getting Started
 
