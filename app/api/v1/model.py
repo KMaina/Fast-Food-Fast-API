@@ -1,9 +1,8 @@
 import psycopg2
 import os
-# from passlib.hash import sha256_crypt
-
+from flask_jwt_extended import create_access_token
 from flask import request, jsonify
-from werkzeug.security import generate_password_hash
+
 from app import migration
 
 connection = migration.db_connection()
@@ -13,7 +12,7 @@ class Users():
     """Class to handle users"""
     
     def register_user(self, username, password, confirm_password, email, address, telephone, admin):
-        
+        """Method to register a user"""
         username = request.json.get('username', None)
         password = request.json.get('password', None)
         confirm_password = request.json.get('confirm_password', None)
@@ -57,34 +56,71 @@ class Users():
             response = jsonify({'msg' : 'Passwords must match'})
             response.status_code = 400
             return response
-        
+
         try:
-            hashed_password = generate_password_hash(password = password, method = 'pbkdf2:sha256', salt_length = 10)
             if admin == True:
                 add_user = "INSERT INTO \
                             users \
                             (username, password, email, address, telephone, admin) \
                             VALUES \
-                            ('" + username +"', '" + hashed_password +"', '" + email + "', '" + address + "', '" + telephone + "',  true )"
+                            ('" + username +"', '" + password +"', '" + email + "', '" + address + "', '" + telephone + "',  true )"
             if admin == False:
                 add_user = "INSERT INTO \
                             users \
                             (username, password, email, address, telephone, admin) \
-                            VALUES ('" + username +"', '" + hashed_password +"', '" + email + "', '" + address + "', '" + telephone + "',  false )"
+                            VALUES ('" + username +"', '" + password +"', '" + email + "', '" + address + "', '" + telephone + "',  false )"
+
             cursor.execute(add_user)
-            
-            cursor.close()
             connection.commit()
+    
             response =  jsonify({'msg' : 'User successfully added to the databse'})
             response.status_code = 201
             return response
+
         except (Exception, psycopg2.DatabaseError) as error:
             print("Error executing", error)
             response =  jsonify({'msg' : 'Problem inseting into the databse'})
             response.status_code = 400
             return response
-        finally:
-            if(connection):
-                cursor.close()
-                connection.close()
-                print("PostgreSQL connection is closed")
+    
+    def login(self, username, password):
+        """Method to login a user"""
+        username = request.json.get('username', None)
+        password = request.json.get('password', None)
+
+        if type(username) != str:
+            print(type(username))
+            response = jsonify({'msg' : 'Username must be a string'})
+            response.status_code = 400
+            return response
+        
+        if type(password) != str:
+            response = jsonify({'msg' : 'Password must be a string'})
+            response.status_code = 400
+            return response
+
+        try:
+            get_user = "SELECT username, password from users WHERE username = '" + username + "' AND password = '" + password +  "'"
+
+            cursor.execute(get_user)
+
+            row = cursor.fetchone()
+            print(row)
+
+            if row is not None:
+                print(row)
+                row = cursor.fetchone()    
+                access_token = create_access_token(identity=username)
+                print(access_token)
+                response =  jsonify({"msg" : "Successfully logged in", "access_token" : access_token})
+                response.status_code = 200
+                return response
+            else:
+                response = jsonify({"msg" : "Error logging in, credentials not found"})
+                response.status_code = 401
+                return response
+
+        except (Exception, psycopg2.DatabaseError) as error:
+            print("Error executing", error)
+            return jsonify({"msg" : "Error, check the database {}".format(error)})
+        

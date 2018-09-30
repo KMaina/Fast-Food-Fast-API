@@ -15,3 +15,11 @@ class UserRegister(Resource):
             request.json['telephone'],
             request.json['admin']
         )
+    
+class UserLogin(Resource):
+    """This class is used to login a user"""
+    def post(self):
+        return Users().login(
+            request.json['username'],
+            request.json['password']
+        )
