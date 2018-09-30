@@ -2,9 +2,19 @@ language: python
 python:
   - "3.6"
 
+addons:
+  postgresql: "10"
+  apt:
+    packages:
+    - postgresql-10
+    - postgresql-client-10
+
 install:
   - pip install -r requirements.txt
   - pip install coveralls
+
+before_script:
+  - psql -c 'create database travis_ci_test;' -U postgres
 
 script:
   - coverage run --source=app -m pytest && coverage report
