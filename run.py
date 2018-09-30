@@ -1,8 +1,3 @@
-# from app import app
-
-# if __name__ == 'main':
-#     app.run()
-
 import os
 
 from app import create_app
