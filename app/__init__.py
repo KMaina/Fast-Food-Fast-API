@@ -6,6 +6,7 @@ included to make app a package
 
 from flask import Flask
 from flask_restful import Api
+from flask_jwt_extended import JWTManager
 
 from app.api.v1.views_register import UserRegister
 
@@ -18,5 +19,7 @@ def create_app(config_name):
 
     api_endpoint = Api(app)
     api_endpoint.add_resource(UserRegister, '/api/v2/auth/signup')
+
+    jwt = JWTManager(app)
 
     return app
