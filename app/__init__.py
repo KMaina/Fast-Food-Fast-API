@@ -18,7 +18,7 @@ def create_app(config_name):
     app.config.from_object(app_config[config_name])
     app.config.from_pyfile('config.py')
     app.secret_key = os.getenv('SECRET_KEY')
-    print(app.secret_key)
+
     api_endpoint = Api(app)
     api_endpoint.add_resource(UserRegister, '/api/v2/auth/signup')
     api_endpoint.add_resource(UserLogin, '/api/v2/auth/login')

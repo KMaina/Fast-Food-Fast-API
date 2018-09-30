@@ -78,8 +78,7 @@ class Users():
             return response
 
         except (Exception, psycopg2.DatabaseError) as error:
-            print("Error executing", error)
-            response =  jsonify({'msg' : 'Problem inseting into the databse'})
+            response =  jsonify({'msg' : 'Problem inserting into the databse'})
             response.status_code = 400
             return response
     
@@ -105,10 +104,8 @@ class Users():
             cursor.execute(get_user)
 
             row = cursor.fetchone()
-            print(row)
-
+            
             if row is not None:
-                print(row)
                 row = cursor.fetchone()    
                 access_token = create_access_token(identity=username)
                 print(access_token)
