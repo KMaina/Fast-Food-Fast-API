@@ -1,3 +1,4 @@
+"""Test for for testing the login endpoint"""
 import unittest
 import json
 
@@ -15,30 +16,31 @@ class UserLoginTestCase(unittest.TestCase):
 
     def test_user_login(self):
         """Tests if the correct credentials were supplied"""
-        response = self.client().post('/api/v2/auth/login', data = json.dumps({
-            "username" : "molly",
-            "password" : "123",
-        }), content_type = 'application/json')
+        response = self.client().post('/api/v2/auth/login', data=json.dumps({
+            "username":"molly",
+            "password":"123",
+        }), content_type='application/json')
 
         self.assertEqual(response.status_code, 200)
         self.assertIn("Successfully logged in", str(response.data))
     
     def test_user_empty_credentials(self):
         """Tests if no credentials were supplied"""
-        response = self.client().post('/api/v2/auth/login', data = json.dumps({
-            "username" : "",
-            "password" : "",
-        }), content_type = 'application/json')
+        response = self.client().post('/api/v2/auth/login', data=json.dumps({
+            "username":"",
+            "password":"",
+        }), content_type='application/json')
 
         self.assertEqual(response.status_code, 401)
         self.assertIn("Error logging in, credentials not found", str(response.data))
     
     def test_user_no_credentials(self):
         """Tests if a user does not exist"""
-        response = self.client().post('/api/v2/auth/login', data = json.dumps({
-            "username" : "kim",
-            "password" : "pass",
-        }), content_type = 'application/json')
+        response = self.client().post('/api/v2/auth/login', data=json.dumps({
+            "username":"kim",
+            "password":"pass",
+        }), content_type='application/json')
 
         self.assertEqual(response.status_code, 401)
         self.assertIn("Error logging in, credentials not found", str(response.data))
+        

@@ -1,3 +1,4 @@
+"""Test for for testing the register endpoint"""
 import unittest
 import json
 
@@ -9,12 +10,12 @@ class UserRegisterTestCase(unittest.TestCase):
         """Initialize the app and database connections"""
         self.app = create_app(config_name="testing")
         self.client = self.app.test_client
-    
         with self.app.app_context():
             migration.main(config='testing')
 
     def test_register_user(self):
-        response = self.client().post('/api/v2/auth/signup', data = json.dumps({
+        """Method to test if a user is successfully registered"""
+        response = self.client().post('/api/v2/auth/signup', data=json.dumps({
             "username" : "coolkid",
             "password" : "123",
             "confirm_password" : "123",
@@ -22,6 +23,6 @@ class UserRegisterTestCase(unittest.TestCase):
             "address" : "Langata, Nairobi",
             "telephone" : "+712249175",
             "admin" : False
-        }), content_type = 'application/json')
+        }), content_type='application/json')
 
         self.assertEqual(response.status_code, 201)

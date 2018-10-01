@@ -1,20 +1,20 @@
+"""
+File to manage the connection to the database, creation and deletion of tables
+"""
 import os
 import psycopg2
-from psycopg2 import Error
 
-def db_connection(config = None):
+def db_connection(config=None):
     """Make a connection to the DB"""
     if config == 'testing':
         db_name = os.getenv('DB_TEST')
     else:
         db_name = os.getenv('DB_MAIN')
-        
     user = os.getenv('DB_USER')
     password = os.getenv('DB_PASSWORD')
     host = os.getenv('DB_HOST')
     port = os.getenv('DB_PORT')
 
-    
     return  psycopg2.connect(user=user, password=password, host=host, port=port, database=db_name)
 
 def create_tables(cursor):
@@ -65,17 +65,16 @@ def drop_tables(cursor):
              "DROP TABLE status CASCADE"]
     for drop in drops:
         cursor.execute(drop)
-    
     cursor.close()
-
-    # connection.commit()
+    connection.commit()
 
 def main(config=None):
-
+    """
+    This function is run in the command line to automate the connection to the database
+    and creation of tables in the database
+    """
     connection = db_connection(config=config)
     cursor = connection.cursor()
-
-    # drop_tables(cursor)
 
     create_tables(cursor)
 
