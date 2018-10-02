@@ -21,28 +21,28 @@ class Users():
         address = request.json.get('address', None)
         telephone = request.json.get('telephone', None)
         admin = request.json.get('admin', None)
-        if isinstance(username, str):
+        if not isinstance(username, str):
             print(type(username))
             response = jsonify({'msg':'Username must be a string'})
             response.status_code = 400
             return response
-        if isinstance(password, str) and isinstance(confirm_password, str):
+        if not isinstance(password, str) and isinstance(confirm_password, str):
             response = jsonify({'msg':'Password must be a string'})
             response.status_code = 400
             return response
-        if isinstance(email, str):
+        if not isinstance(email, str):
             response = jsonify({'msg':'Email must be a string'})
             response.status_code = 400
             return response
-        if isinstance(address, str):
+        if not isinstance(address, str):
             response = jsonify({'msg':'Address must be a string'})
             response.status_code = 400
             return response
-        if isinstance(telephone, str):
+        if not isinstance(telephone, str):
             response = jsonify({'msg':'Telephone number must be a string'})
             response.status_code = 400
             return response
-        if isinstance(admin, bool):
+        if not isinstance(admin, bool):
             response = jsonify({'msg':'Admin must be a boolean'})
             response.status_code = 400
             return response
@@ -78,32 +78,33 @@ class Users():
         """Method to login a user"""
         username = request.json.get('username', None)
         password = request.json.get('password', None)
-        if isinstance(username, str):
+        if not isinstance(username, str):
             print(type(username))
             response = jsonify({'msg' : 'Username must be a string'})
             response.status_code = 400
             return response
-        if isinstance(username, str):
+        if not isinstance(username, str):
             response = jsonify({'msg' : 'Password must be a string'})
             response.status_code = 400
             return response
         try:
-            get_user = "SELECT username, password \
+            get_user = "SELECT username, password, admin \
                         FROM users \
                         WHERE username = '" + username + "' AND password = '" + password +  "'"
             cursor.execute(get_user)
             row = cursor.fetchone()
             if row is not None:
+                dbusername = row[0]
+                dbpassword = row[1]
+                dbadmin = row[2]
                 row = cursor.fetchone()
-                access_token = create_access_token(identity=username)
-                print(access_token)
-                response = jsonify({"msg":"Successfully logged in", "access_token":access_token})
+                access_token = create_access_token(identity={"user":dbusername, "admin":dbadmin})
+                response = jsonify({"msg":"Successfully logged in", "access_token":access_token, "admin":dbadmin})
                 response.status_code = 200
                 return response
             response = jsonify({"msg" : "Error logging in, credentials not found"})
             response.status_code = 401
             return response
         except (Exception, psycopg2.DatabaseError) as error:
-            print("Error executing", error)
             return jsonify({"msg" : "Error, check the database {}".format(error)})
         
