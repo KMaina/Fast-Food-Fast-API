@@ -2,7 +2,7 @@
 from flask import request
 from flask_restful import Resource
 
-from app.api.v1.model import Users
+from app.api.v2.model import Users
 
 class UserRegister(Resource):
     """This class is used to register a new user"""
@@ -26,3 +26,4 @@ class UserLogin(Resource):
             request.json['username'],
             request.json['password']
         )
+        

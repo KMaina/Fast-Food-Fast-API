@@ -21,28 +21,28 @@ class Users():
         address = request.json.get('address', None)
         telephone = request.json.get('telephone', None)
         admin = request.json.get('admin', None)
-        if isinstance(username, str):
+        if not isinstance(username, str):
             print(type(username))
             response = jsonify({'msg':'Username must be a string'})
             response.status_code = 400
             return response
-        if isinstance(password, str) and isinstance(confirm_password, str):
+        if not isinstance(password, str) and isinstance(confirm_password, str):
             response = jsonify({'msg':'Password must be a string'})
             response.status_code = 400
             return response
-        if isinstance(email, str):
+        if not isinstance(email, str):
             response = jsonify({'msg':'Email must be a string'})
             response.status_code = 400
             return response
-        if isinstance(address, str):
+        if not isinstance(address, str):
             response = jsonify({'msg':'Address must be a string'})
             response.status_code = 400
             return response
-        if isinstance(telephone, str):
+        if not isinstance(telephone, str):
             response = jsonify({'msg':'Telephone number must be a string'})
             response.status_code = 400
             return response
-        if isinstance(admin, bool):
+        if not isinstance(admin, bool):
             response = jsonify({'msg':'Admin must be a boolean'})
             response.status_code = 400
             return response
@@ -78,12 +78,12 @@ class Users():
         """Method to login a user"""
         username = request.json.get('username', None)
         password = request.json.get('password', None)
-        if isinstance(username, str):
+        if not isinstance(username, str):
             print(type(username))
             response = jsonify({'msg' : 'Username must be a string'})
             response.status_code = 400
             return response
-        if isinstance(username, str):
+        if not isinstance(username, str):
             response = jsonify({'msg' : 'Password must be a string'})
             response.status_code = 400
             return response
