@@ -7,7 +7,7 @@ from flask import Flask
 from flask_restful import Api
 from flask_jwt_extended import JWTManager
 
-from app.api.v2.views_register import UserRegister, UserLogin
+from app.api.v2.views_users import UserRegister, UserLogin
 
 from instance.config import app_config
 

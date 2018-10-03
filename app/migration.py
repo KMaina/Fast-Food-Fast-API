@@ -16,6 +16,7 @@ def db_connection(config=None):
     port = os.getenv('DB_PORT')
 
     return  psycopg2.connect(user=user, password=password, host=host, port=port, database=db_name)
+    
 
 def create_tables(cursor):
     """Create all tables"""

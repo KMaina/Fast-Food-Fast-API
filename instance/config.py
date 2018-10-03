@@ -4,7 +4,8 @@ class Config(object):
     """Parent configuration class."""
     DEBUG = False
     CSRF_ENABLED = True
-    SECRET = os.getenv('SECRET')
+    SECRET_KEY = os.getenv('SECRET_KEY')
+    DB_URL = os.getenv('DB_PATH')
 
 class DevelopmentConfig(Config):
     """Configurations for Development."""
@@ -19,7 +20,7 @@ class TestingConfig(Config):
 class StagingConfig(Config):
     """Configurations for Staging."""
     DEBUG = True
-
+    DB_URL = os.getenv('DB_PATH_TEST')
 
 class ProductionConfig(Config):
     """Configurations for Production."""
