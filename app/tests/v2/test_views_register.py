@@ -16,10 +16,10 @@ class UserRegisterTestCase(unittest.TestCase):
     def test_register_user(self):
         """Method to test if a user is successfully registered"""
         response = self.client().post('/api/v2/auth/signup', data=json.dumps({
-            "username" : "coolkid",
+            "username" : "molly",
             "password" : "123",
             "confirm_password" : "123",
-            "email" : "coolkid@me.com",
+            "email" : "molly@me.com",
             "address" : "Langata, Nairobi",
             "telephone" : "+712249175",
             "admin" : False
