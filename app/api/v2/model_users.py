@@ -119,4 +119,4 @@ class Users():
         except (Exception, psycopg2.DatabaseError) as error:
             print("Error executing", error)
             return jsonify({"msg" : "Error, check the database {}".format(error)})
-        
+    
