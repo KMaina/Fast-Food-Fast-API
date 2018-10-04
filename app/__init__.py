@@ -7,7 +7,7 @@ included to make app a package
 from flask import Flask
 from flask_restful import Api
 
-from app.api.v1.views import Orders, OrderSpecific
+from app.api.v2.views_users import UserRegister, UserLogin
 
 from instance.config import app_config
 
