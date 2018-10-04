@@ -9,7 +9,7 @@ from flask_restful import Api
 from flask_jwt_extended import JWTManager
 
 from app.api.v2.views_users import UserRegister, UserLogin
-from app.api.v2.model_menu import Meals
+from app.api.v2.views_menu import Menu
 
 from instance.config import app_config
 
@@ -21,7 +21,7 @@ def create_app(config_name):
     api_endpoint = Api(app)
     api_endpoint.add_resource(UserRegister, '/api/v2/auth/signup')
     api_endpoint.add_resource(UserLogin, '/api/v2/auth/login')
-    api_endpoint.add_resource(Meals, '/api/v2/menu')
+    api_endpoint.add_resource(Menu, '/api/v2/menu')
 
     jwt = JWTManager(app)
 
