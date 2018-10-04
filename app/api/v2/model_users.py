@@ -10,6 +10,16 @@ from app import migration
 connection = migration.db_connection()
 cursor = connection.cursor()
 
+def get_user_id(name):
+    if not isinstance(name,str):
+        return {"msg":"Name must be a string"}
+    cursor.execute("SELECT user_id FROM users WHERE username = '{}'".format(name))
+    connection.commit()
+    userid = cursor.fetchone()
+    if userid:
+        return userid[0]
+    return {'msg':'Problem getting the user id'}
+
 class Users():
     """Class to handle users"""
     def register_user(self, username, password, confirm_password, email, address, telephone, admin):
@@ -66,11 +76,11 @@ class Users():
                              '" + address + "', '" + telephone + "',  false )"
             cursor.execute(add_user)
             connection.commit()
-            response = jsonify({'msg':'User successfully added to the databse'})
+            response = jsonify({'msg':'User successfully added to the database'})
             response.status_code = 201
             return response
         except (Exception, psycopg2.DatabaseError) as error:
-            response = jsonify({'msg':'Problem inserting into the databse'})
+            response = jsonify({'msg':'Problem inserting into the database'})
             response.status_code = 400
             return response
 
@@ -88,14 +98,18 @@ class Users():
             response.status_code = 400
             return response
         try:
-            get_user = "SELECT username, password \
+            get_user = "SELECT username, password, admin \
                         FROM users \
                         WHERE username = '" + username + "' AND password = '" + password +  "'"
             cursor.execute(get_user)
             row = cursor.fetchone()
             if row is not None:
-                row = cursor.fetchone()
-                access_token = create_access_token(identity=username)
+                dbusername = row[0] 
+                dbadmin = row[2]
+                if not dbusername or dbadmin:
+                    return {'msg':'Error, problem getting credentials from the database'}, 400
+                print(dbusername,dbadmin)
+                access_token = create_access_token(identity={"username": dbusername, "admin": dbadmin})
                 print(access_token)
                 response = jsonify({"msg":"Successfully logged in", "access_token":access_token})
                 response.status_code = 200

@@ -49,9 +49,12 @@ def create_tables(cursor):
         """
         CREATE TABLE IF NOT EXISTS orders (
                 order_id SERIAL,
-                total_cost INT NOT NULL,
                 status_table_id INT REFERENCES status(status_id) ON DELETE CASCADE,
-                PRIMARY KEY (order_id, status_table_id)
+                meal_item VARCHAR(255) NOT NULL,
+                order_quantity INT NOT NULL,
+                order_cost INT NOT NULL,
+                user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
+                PRIMARY KEY (order_id, status_table_id, user_id)
             )
         """)
 
