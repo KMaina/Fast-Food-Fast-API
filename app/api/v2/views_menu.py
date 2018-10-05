@@ -11,3 +11,20 @@ class Menu(Resource):
     def get(self):
         """Method to get all meals"""
         return Meals().get_all_meals()
+        
+    """This is the class to add and get meals in the menu"""
+    @jwt_required
+    def post(self):
+        """Method to add a meal to the menu"""
+        current_user = get_jwt_identity()
+        
+        if current_user['admin'] == True:
+            return Meals().add_menu(
+                request.json['meal_name'],
+                request.json['quantity'],
+                request.json['description'],
+                request.json['cost']
+            )
+
+        if current_user['admin'] == False:
+            return {'msg':'Sorry, you do not have the rights to access this page'}, 403   
