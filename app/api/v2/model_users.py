@@ -88,15 +88,17 @@ class Users():
             response.status_code = 400
             return response
         try:
-            get_user = "SELECT username, password \
+            get_user = "SELECT username, password, admin \
                         FROM users \
                         WHERE username = '" + username + "' AND password = '" + password +  "'"
             cursor.execute(get_user)
             row = cursor.fetchone()
             if row is not None:
-                row = cursor.fetchone()
-                access_token = create_access_token(identity=username)
-                print(access_token)
+                dbusername = row[0] 
+                dbadmin = row[2]
+                if not dbusername or not dbadmin:
+                    return {'msg':'Error, problem getting credentials from the database'}, 400
+                access_token = create_access_token(identity={"username": dbusername, "admin": dbadmin})
                 response = jsonify({"msg":"Successfully logged in", "access_token":access_token})
                 response.status_code = 200
                 return response
@@ -104,6 +106,4 @@ class Users():
             response.status_code = 401
             return response
         except (Exception, psycopg2.DatabaseError) as error:
-            print("Error executing", error)
             return jsonify({"msg" : "Error, check the database {}".format(error)})
-        
