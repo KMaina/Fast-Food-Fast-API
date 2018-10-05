@@ -9,6 +9,26 @@ cursor = connection.cursor()
 
 class Meals():
     """Class to handle the menu"""
+<<<<<<< HEAD
+    def get_all_meals(self):
+        """Method to get all food items"""
+        get_meals = "SELECT * FROM menus"
+        cursor.execute(get_meals)
+        rows = cursor.fetchall()
+        meals_list = []
+        if rows:
+            for row in rows:
+                meals_dict = {
+                    "meal_name" : row[1],
+                    "quantity" : row[2],
+                    "description" : row[3],
+                    "cost" : row[4]
+                }
+                meals_list.append(meals_dict)
+            return {"meals" : meals_list}, 200
+        else:
+            return {"msg":"No meals found"}, 404
+=======
     def add_menu(self, meal_name, quantity, description, cost):
         """Method to add a meal to the database"""
         meal_name = request.json.get('meal_name', None)
@@ -46,3 +66,4 @@ class Meals():
                 response.status_code = 400
                 return response
     
+>>>>>>> develop

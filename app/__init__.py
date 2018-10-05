@@ -19,6 +19,7 @@ def create_app(config_name):
     app.config.from_pyfile('config.py')
     
     api_endpoint = Api(app)
+
     api_endpoint.add_resource(UserRegister, '/api/v2/auth/signup')
     api_endpoint.add_resource(UserLogin, '/api/v2/auth/login')
     api_endpoint.add_resource(Menu, '/api/v2/menu')

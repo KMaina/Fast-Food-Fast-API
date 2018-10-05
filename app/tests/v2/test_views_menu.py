@@ -13,8 +13,7 @@ class MenuTestCase(unittest.TestCase):
     
         with self.app.app_context():
             migration.main(config='testing')
-            
-        
+
     def test_add_food_item(self):
         """Tests if a food item is added"""
         response = self.client().post('/api/v2/menu', data=json.dumps({
@@ -47,3 +46,8 @@ class MenuTestCase(unittest.TestCase):
         }), content_type='application/json')
         self.assertAlmostEqual(response.status_code, 400)
         self.assertIn("Missing input", str(response.data))
+
+    def test_get_food_item(self):
+            """Tests if a food item is added"""
+            response = self.client().get('/api/v2/menu')
+            self.assertEqual(response.status_code, 200)
