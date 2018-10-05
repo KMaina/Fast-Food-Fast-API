@@ -10,6 +10,16 @@ from app import migration
 connection = migration.db_connection()
 cursor = connection.cursor()
 
+def get_user_id(name):
+    if not isinstance(name,str):
+        return {"msg":"Name must be a string"}
+    cursor.execute("SELECT user_id FROM users WHERE username = '{}'".format(name))
+    connection.commit()
+    userid = cursor.fetchone()
+    if userid:
+        return userid[0]
+    return {'msg':'Problem getting the user id'}
+
 class Users():
     """Class to handle users"""
     def register_user(self, username, password, confirm_password, email, address, telephone, admin):
@@ -88,15 +98,17 @@ class Users():
             response.status_code = 400
             return response
         try:
-            get_user = "SELECT username, password \
+            get_user = "SELECT username, password, admin \
                         FROM users \
                         WHERE username = '" + username + "' AND password = '" + password +  "'"
             cursor.execute(get_user)
             row = cursor.fetchone()
             if row is not None:
-                row = cursor.fetchone()
-                access_token = create_access_token(identity=username)
-                print(access_token)
+                dbusername = row[0] 
+                dbadmin = row[2]
+                if not dbusername or not dbadmin:
+                    return {'msg':'Error, problem getting credentials from the database'}, 400
+                access_token = create_access_token(identity={"username": dbusername, "admin": dbadmin})
                 response = jsonify({"msg":"Successfully logged in", "access_token":access_token})
                 response.status_code = 200
                 return response
@@ -104,6 +116,5 @@ class Users():
             response.status_code = 401
             return response
         except (Exception, psycopg2.DatabaseError) as error:
-            print("Error executing", error)
             return jsonify({"msg" : "Error, check the database {}".format(error)})
-        
+         
