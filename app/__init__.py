@@ -25,6 +25,7 @@ def create_app(config_name):
     api_endpoint.add_resource(UserOrders, '/api/v2/users/orders')
     api_endpoint.add_resource(Menu, '/api/v2/menu')
 
+
     jwt = JWTManager(app)
 
     return app

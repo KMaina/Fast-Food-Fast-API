@@ -120,9 +120,6 @@ class Users():
                 if not dbusername or not dbadmin:
                     return {'msg':'Error, problem getting credentials from the database'}, 400
                 access_token = create_access_token(identity={"username": dbusername, "admin": dbadmin})
-                dbusername = row[0]
-                dbadmin = row[2]
-                access_token = create_access_token(identity={"user":dbusername, "admin":dbadmin})
                 response = jsonify({"msg":"Successfully logged in", "access_token":access_token})
                 response.status_code = 200
                 return response
@@ -130,6 +127,4 @@ class Users():
             response.status_code = 401
             return response
         except (Exception, psycopg2.DatabaseError) as error:
-            print("Error executing", error)
             return jsonify({"msg" : "Error, check the database {}".format(error)})
-    

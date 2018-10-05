@@ -7,6 +7,13 @@ from app.api.v2.model_orders import Orders
 class UserOrders(Resource):
     """Method to add and get orders"""
     @jwt_required
+    def get(self):
+        """Method to get all a user's orders"""
+        current_user = get_jwt_identity()
+
+        return Orders().get_user_order(current_user['username'])
+      
+    @jwt_required
     def post(self):
         """Method to add a food item"""
         current_user = get_jwt_identity()
