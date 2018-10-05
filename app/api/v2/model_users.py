@@ -117,8 +117,9 @@ class Users():
             if row is not None:
                 dbusername = row[0] 
                 dbadmin = row[2]
-                if not dbusername or not dbadmin:
-                    return {'msg':'Error, problem getting credentials from the database'}, 400
+                print(dbusername, dbadmin)
+                # if not dbusername or not dbadmin:
+                #     return {'msg':'Error, problem getting credentials from the database'}, 400
                 access_token = create_access_token(identity={"username": dbusername, "admin": dbadmin})
                 response = jsonify({"msg":"Successfully logged in", "access_token":access_token})
                 response.status_code = 200

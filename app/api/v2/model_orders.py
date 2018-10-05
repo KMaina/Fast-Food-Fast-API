@@ -51,6 +51,6 @@ class Orders():
             cursor.execute(orders_table)
             connection.commit()
             return {'msg':'Order successfully created'}, 201
-         except (Exception, psycopg2.DatabaseError) as error
+        except (Exception, psycopg2.DatabaseError) as error:
             connection.close()
             return {'Error', error}, 400
