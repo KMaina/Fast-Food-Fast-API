@@ -31,31 +31,38 @@ class Users():
         address = request.json.get('address', None)
         telephone = request.json.get('telephone', None)
         admin = request.json.get('admin', None)
+
         if not isinstance(username, str):
             print(type(username))
             response = jsonify({'msg':'Username must be a string'})
             response.status_code = 400
             return response
+
         if not isinstance(password, str) and isinstance(confirm_password, str):
             response = jsonify({'msg':'Password must be a string'})
             response.status_code = 400
             return response
+
         if not isinstance(email, str):
             response = jsonify({'msg':'Email must be a string'})
             response.status_code = 400
             return response
+
         if not isinstance(address, str):
             response = jsonify({'msg':'Address must be a string'})
             response.status_code = 400
             return response
+
         if not isinstance(telephone, str):
             response = jsonify({'msg':'Telephone number must be a string'})
             response.status_code = 400
             return response
+
         if not isinstance(admin, bool):
             response = jsonify({'msg':'Admin must be a boolean'})
             response.status_code = 400
             return response
+
         if password != confirm_password:
             response = jsonify({'msg':'Passwords must match'})
             response.status_code = 400
@@ -76,11 +83,11 @@ class Users():
                              '" + address + "', '" + telephone + "',  false )"
             cursor.execute(add_user)
             connection.commit()
-            response = jsonify({'msg':'User successfully added to the databse'})
+            response = jsonify({'msg':'User successfully added to the database'})
             response.status_code = 201
             return response
         except (Exception, psycopg2.DatabaseError) as error:
-            response = jsonify({'msg':'Problem inserting into the databse'})
+            response = jsonify({'msg':'Problem inserting into the database'})
             response.status_code = 400
             return response
 
@@ -88,21 +95,25 @@ class Users():
         """Method to login a user"""
         username = request.json.get('username', None)
         password = request.json.get('password', None)
+
         if not isinstance(username, str):
             print(type(username))
             response = jsonify({'msg' : 'Username must be a string'})
             response.status_code = 400
             return response
+
         if not isinstance(username, str):
             response = jsonify({'msg' : 'Password must be a string'})
             response.status_code = 400
             return response
+
         try:
             get_user = "SELECT username, password, admin \
                         FROM users \
                         WHERE username = '" + username + "' AND password = '" + password +  "'"
             cursor.execute(get_user)
             row = cursor.fetchone()
+            print(row)
             if row is not None:
                 dbusername = row[0] 
                 dbadmin = row[2]
@@ -117,4 +128,3 @@ class Users():
             return response
         except (Exception, psycopg2.DatabaseError) as error:
             return jsonify({"msg" : "Error, check the database {}".format(error)})
-         

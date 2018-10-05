@@ -12,3 +12,15 @@ class UserOrders(Resource):
         current_user = get_jwt_identity()
 
         return Orders().get_user_order(current_user['username'])
+      
+    @jwt_required
+    def post(self):
+        """Method to add a food item"""
+        current_user = get_jwt_identity()
+        
+        return Orders().add_order(
+            current_user['username'],
+            request.json['meal_item'],
+            request.json['order_quantity'],
+            request.json['order_cost']
+        )
